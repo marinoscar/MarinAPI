@@ -9,9 +9,13 @@
       - "9090:9090"   # HTTP: container:host
       - "9081:9081"   # HTTPS (if you’re using certificates)
     environment:
+      # Postgres connection
       DB_SERVER: pgadmin.marin.cr
       DB_PORT: 5432
-      #DB_USER: postgres
-      #DB_PASSWORD: supersecurepassword
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
       DB_NAME: serilogs
       ASPNETCORE_URLS: http://+:9090;https://+:9081  # <- Tells Kestrel to bind to all interfaces
+
+      # Key used to authorize the api calls
+      API_KEY: ${API_KEY}
