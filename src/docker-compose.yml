@@ -1,12 +1,17 @@
-services:
+﻿services:
   api:
     image: ${DOCKER_REGISTRY-}api
     build:
       context: .
       dockerfile: API/Dockerfile
+     # Expose the container's ports to the host machine
+    ports:
+      - "9090:9090"   # HTTP: container:host
+      - "9081:9081"   # HTTPS (if you’re using certificates)
     environment:
       DB_SERVER: pgadmin.marin.cr
       DB_PORT: 5432
       #DB_USER: postgres
       #DB_PASSWORD: supersecurepassword
       DB_NAME: serilogs
+      ASPNETCORE_URLS: http://+:9090;https://+:9081  # <- Tells Kestrel to bind to all interfaces
