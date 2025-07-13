@@ -18,7 +18,7 @@ namespace API
 
             // Add swagger
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            builder.Services.AddSwaggerWithApiKey();
 
             //adds logging
             builder.Host.ConfigureSerilogLogging();
@@ -30,10 +30,10 @@ namespace API
 
 
             // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
-            {
-                app.MapOpenApi();
-            }
+            //if (app.Environment.IsDevelopment())
+            //{
+            //    app.MapOpenApi();
+            //}
 
             app.UseHttpsRedirection();
 
