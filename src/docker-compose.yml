@@ -4,7 +4,7 @@ services:
     build:
       context: .
       dockerfile: API/Dockerfile
-  environment:
+    environment:
       DB_SERVER: pgadmin.marin.cr
       DB_PORT: 5432
       #DB_USER: postgres
