@@ -1,0 +1,12 @@
+services:
+  api:
+    image: ${DOCKER_REGISTRY-}api
+    build:
+      context: .
+      dockerfile: API/Dockerfile
+  environment:
+      DB_SERVER: pgadmin.marin.cr
+      DB_PORT: 5432
+      #DB_USER: postgres
+      #DB_PASSWORD: supersecurepassword
+      DB_NAME: serilogs
