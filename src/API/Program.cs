@@ -16,6 +16,10 @@ namespace API
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             builder.Services.AddOpenApi();
 
+            // Add swagger
+            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSwaggerGen();
+
             //adds logging
             builder.Host.ConfigureSerilogLogging();
 
@@ -37,6 +41,10 @@ namespace API
 
 
             app.MapControllers();
+
+            // Enable Swagger
+            app.UseSwagger();
+            app.UseSwaggerUI();
 
             app.Run();
         }
