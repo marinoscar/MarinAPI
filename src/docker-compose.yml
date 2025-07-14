@@ -17,7 +17,7 @@
       DB_PASSWORD: ${DB_PASSWORD}
       DB_NAME: logging
       DB_TABLENAME: serilogs
-      ASPNETCORE_URLS: http://+:9090;https://+:9081  # <- Tells Kestrel to bind to all interfaces
+      ASPNETCORE_URLS: http://+:9090
 
       # Key used to authorize the api calls
       API_KEY: ${API_KEY}
