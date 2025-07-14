@@ -7,6 +7,7 @@ namespace API.Controllers
     [Route("api/[controller]")]
     [ApiKeyAuthorize]
     [ApiController]
+    [Tags("Secured")]
     public class TipoDeCambioController : ControllerBase
     {
         [HttpGet("compraventa")]

@@ -53,6 +53,7 @@ namespace API.Controllers
         }
 
         [ApiKeyAuthorize]
+        [Tags("Secured")]
         [HttpGet("apikeycheck")]
         public IActionResult ApiKeyCheck()
         {
