@@ -30,8 +30,9 @@ namespace API.Config
                     connectionString: connectionString,
                     tableName: dbTableName,
                     columnOptions: columnWriters,
-                    needAutoCreateTable: false
+                    needAutoCreateTable: false, respectCase: false
                 )
+                .MinimumLevel.Debug()
                 .CreateLogger();
 
             hostBuilder.UseSerilog();
