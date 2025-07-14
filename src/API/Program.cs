@@ -1,6 +1,7 @@
 
 using API.Config;
 using API.Middleware;
+using Serilog;
 
 namespace API
 {
@@ -36,6 +37,7 @@ namespace API
             //    app.MapOpenApi();
             //}
 
+            
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
@@ -46,6 +48,8 @@ namespace API
             // Enable Swagger
             app.UseSwagger();
             app.UseSwaggerUI();
+
+            Log.Information("Application started successfully");
 
             app.Run();
         }
