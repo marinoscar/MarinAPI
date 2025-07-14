@@ -4,6 +4,7 @@
     build:
       context: .
       dockerfile: API/Dockerfile
+
      # Expose the container's ports to the host machine
     ports:
       - "9090:9090"   # HTTP: container:host
