@@ -27,7 +27,7 @@ namespace API
             var app = builder.Build();
 
             //add support to custom logging on the middleware
-            app.UseMiddleware<LoggingMiddleware>();
+            app.UseMiddleware<ObservabilityMiddleware>();
 
 
             // Configure the HTTP request pipeline.

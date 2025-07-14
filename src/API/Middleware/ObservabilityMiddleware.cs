@@ -3,11 +3,11 @@ using System.Diagnostics;
 
 namespace API.Middleware
 {
-    public class LoggingMiddleware
+    public class ObservabilityMiddleware
     {
         private readonly RequestDelegate _next;
 
-        public LoggingMiddleware(RequestDelegate next)
+        public ObservabilityMiddleware(RequestDelegate next)
         {
             _next = next;
         }
