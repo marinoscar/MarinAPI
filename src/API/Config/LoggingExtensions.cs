@@ -8,13 +8,9 @@ namespace API.Config
     {
         public static void ConfigureSerilogLogging(this IHostBuilder hostBuilder)
         {
-            var dbServer = Environment.GetEnvironmentVariable("DB_SERVER") ?? "localhost";
-            var dbUser = Environment.GetEnvironmentVariable("DB_USER") ?? "postgres";
-            var dbPassword = Environment.GetEnvironmentVariable("DB_PASSWORD") ?? "password";
-            var dbPort = Environment.GetEnvironmentVariable("DB_PORT") ?? "5432";
-            var dbName = Environment.GetEnvironmentVariable("DB_NAME") ?? "logsdb";
+            var dbTableName = Environment.GetEnvironmentVariable("DB_TABLENAME") ?? "serilogs";
 
-            var connectionString = $"Host={dbServer};Port={dbPort};Database={dbName};Username={dbUser};Password={dbPassword}";
+            var connectionString = DbHelper.GetConnectionString();
 
             var columnWriters = new Dictionary<string, ColumnWriterBase>
             {
@@ -32,7 +28,7 @@ namespace API.Config
                 .WriteTo.Console(theme: AnsiConsoleTheme.Literate)
                 .WriteTo.PostgreSQL(
                     connectionString: connectionString,
-                    tableName: "logs",
+                    tableName: dbTableName,
                     columnOptions: columnWriters,
                     needAutoCreateTable: false
                 )
