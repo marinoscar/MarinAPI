@@ -13,8 +13,8 @@ namespace API.Controllers
         [HttpGet("compraventa")]
         public IActionResult Live()
         {
-            var email = Environment.GetEnvironmentVariable("BCCR_EMAIL");
-            var token = Environment.GetEnvironmentVariable("BCCR_TOKEN");
+            var email = Environment.GetEnvironmentVariable("BCCR_EMAIL") ?? "oscar@marin.cr";
+            var token = Environment.GetEnvironmentVariable("BCCR_TOKEN") ?? "NCIR1R2RRM";
             var values = BCCR.TipoDeCambio.IndicadoresEconomicosBCCR.ObtenerTipoDeCambio(email, token).GetAwaiter().GetResult();
             var str = values.ToString();
             return Ok(new
