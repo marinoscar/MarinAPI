@@ -32,6 +32,9 @@ namespace BCCR.TipoDeCambio
                 var compraXml = await compraResponse.Content.ReadAsStringAsync();
                 var ventaXml = await ventaResponse.Content.ReadAsStringAsync();
 
+                var recordsBuy = new Parser().ToList(compraXml, "buy");
+                var recordsSell = new Parser().ToList(ventaXml, "sale");
+
                 //double compra = ParseNumValor(compraXml);
                 //double venta = ParseNumValor(ventaXml);
 
