@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using API.Config;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Npgsql;
 
@@ -24,13 +25,7 @@ namespace API.Controllers
             var dbStatus = "Unknown";
             try
             {
-                var dbServer = Environment.GetEnvironmentVariable("DB_SERVER") ?? "localhost";
-                var dbUser = Environment.GetEnvironmentVariable("DB_USER") ?? "postgres";
-                var dbPassword = Environment.GetEnvironmentVariable("DB_PASSWORD") ?? "password";
-                var dbPort = Environment.GetEnvironmentVariable("DB_PORT") ?? "5432";
-                var dbName = Environment.GetEnvironmentVariable("DB_NAME") ?? "logsdb";
-
-                var connString = $"Host={dbServer};Port={dbPort};Database={dbName};Username={dbUser};Password={dbPassword}";
+                var connString = DbHelper.GetConnectionString();
 
                 using var conn = new NpgsqlConnection(connString);
                 conn.Open();
