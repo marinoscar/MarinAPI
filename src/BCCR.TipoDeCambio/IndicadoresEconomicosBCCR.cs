@@ -4,6 +4,8 @@ namespace BCCR.TipoDeCambio
 {
     public class IndicadoresEconomicosBCCR
     {
+        //doc: https://gee.bccr.fi.cr/indicadoreseconomicos/Documentos/DocumentosMetodologiasNotasTecnicas/Webservices_de_indicadores_economicos.pdf
+
         private static readonly HttpClient httpClient = new HttpClient();
         private const string BCCRUrl = "https://gee.bccr.fi.cr/Indicadores/Suscripciones/WS/wsindicadoreseconomicos.asmx/ObtenerIndicadoresEconomicos";
 
@@ -13,36 +15,13 @@ namespace BCCR.TipoDeCambio
             return await ObtenerTipoDeCambio(email, token, null, null);
         }
 
-        public static async Task<(double compra, double venta)> ObtenerTipoDeCambio(string email, string token, string? fechaInicio = null, string? fechaFinal = null)
+        public static async Task<(double compra, double venta)> ObtenerTipoDeCambio(string email, string token, DateTime? start = null, DateTime? end = null)
         {
             try
             {
-                var today = DateTime.Today;
-                string fecha = $"{today.Day}/{today.Month}/{today.Year}";
-                fechaInicio ??= fecha;
-                fechaFinal ??= fecha;
-
-                var compraPayload = new FormUrlEncodedContent(new[]
-                {
-                new KeyValuePair<string, string>("FechaInicio", fechaInicio),
-                new KeyValuePair<string, string>("FechaFinal", fechaFinal),
-                new KeyValuePair<string, string>("Nombre", "N"),
-                new KeyValuePair<string, string>("SubNiveles", "N"),
-                new KeyValuePair<string, string>("Indicador", "317"), // Compra
-                new KeyValuePair<string, string>("CorreoElectronico", email),
-                new KeyValuePair<string, string>("Token", token)
-            });
-
-                var ventaPayload = new FormUrlEncodedContent(new[]
-                {
-                new KeyValuePair<string, string>("FechaInicio", fechaInicio),
-                new KeyValuePair<string, string>("FechaFinal", fechaFinal),
-                new KeyValuePair<string, string>("Nombre", "N"),
-                new KeyValuePair<string, string>("SubNiveles", "N"),
-                new KeyValuePair<string, string>("Indicador", "318"), // Venta
-                new KeyValuePair<string, string>("CorreoElectronico", email),
-                new KeyValuePair<string, string>("Token", token)
-            });
+                
+                var compraPayload = GetPayload(email, token, FormatDateOrToday(start), FormatDateOrToday(end), "3142");
+                var ventaPayload = GetPayload(email, token, FormatDateOrToday(start), FormatDateOrToday(end), "3205");
 
                 var compraResponse = await httpClient.PostAsync(BCCRUrl, compraPayload);
                 var ventaResponse = await httpClient.PostAsync(BCCRUrl, ventaPayload);
@@ -53,15 +32,30 @@ namespace BCCR.TipoDeCambio
                 var compraXml = await compraResponse.Content.ReadAsStringAsync();
                 var ventaXml = await ventaResponse.Content.ReadAsStringAsync();
 
-                double compra = ParseNumValor(compraXml);
-                double venta = ParseNumValor(ventaXml);
+                //double compra = ParseNumValor(compraXml);
+                //double venta = ParseNumValor(ventaXml);
 
-                return (compra, venta);
+                return (0d, 0d);
             }
             catch (Exception ex)
             {
                 throw new ApplicationException("Error al obtener indicadores económicos del BCCR.", ex);
             }
+        }
+
+        private static FormUrlEncodedContent GetPayload(string email, string token, string fechaInicio, string fechaFinal, string indicador)
+        {
+            var compraPayload = new FormUrlEncodedContent(new[]
+            {
+                new KeyValuePair<string, string>("FechaInicio", fechaInicio),
+                new KeyValuePair<string, string>("FechaFinal", fechaFinal),
+                new KeyValuePair<string, string>("Nombre", "S"),
+                new KeyValuePair<string, string>("SubNiveles", "S"),
+                new KeyValuePair<string, string>("Indicador", indicador),
+                new KeyValuePair<string, string>("CorreoElectronico", email),
+                new KeyValuePair<string, string>("Token", token)
+            });
+            return compraPayload;
         }
 
         private static double ParseNumValor(string xmlContent)
@@ -70,6 +64,12 @@ namespace BCCR.TipoDeCambio
             xmlDoc.LoadXml(xmlContent);
             var valorNode = xmlDoc.GetElementsByTagName("NUM_VALOR")[0];
             return Math.Round(double.Parse(valorNode.InnerText), 2);
+        }
+
+        private static string FormatDateOrToday(DateTime? inputDate)
+        {
+            var dateToFormat = inputDate ?? DateTime.Today;
+            return dateToFormat.ToString("dd/MM/yyyy");
         }
     }
 }
