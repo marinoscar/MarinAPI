@@ -21,3 +21,4 @@
 
       # Key used to authorize the api calls
       API_KEY: ${API_KEY}
+    restart: unless-stopped
