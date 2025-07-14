@@ -1,7 +1,9 @@
 ﻿using API.Config;
+using API.Filters;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Npgsql;
+using System.Net.NetworkInformation;
 
 namespace API.Controllers
 {
@@ -46,6 +48,17 @@ namespace API.Controllers
             {
                 status = "Healthy",
                 db = dbStatus,
+                timestamp = DateTime.UtcNow
+            });
+        }
+
+        [ApiKeyAuthorize]
+        [HttpGet("apikeycheck")]
+        public IActionResult ApiKeyCheck()
+        {
+            return Ok(new
+            {
+                status = "Valid Key",
                 timestamp = DateTime.UtcNow
             });
         }
