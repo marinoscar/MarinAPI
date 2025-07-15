@@ -10,12 +10,12 @@ namespace BCCR.TipoDeCambio
         private const string BCCRUrl = "https://gee.bccr.fi.cr/Indicadores/Suscripciones/WS/wsindicadoreseconomicos.asmx/ObtenerIndicadoresEconomicos";
 
 
-        public static async Task<(double compra, double venta)> GetExchangeRatesAsync(string email, string token)
+        public static async Task<IEnumerable<ExchangeRecord>> GetExchangeRatesAsync(string email, string token)
         {
             return await GetExchangeRateAsync(email, token, DateTime.Today.AddDays(-3), null);
         }
 
-        public static async Task<(double compra, double venta)> GetExchangeRateAsync(string email, string token, DateTime? start = null, DateTime? end = null)
+        public static async Task<IEnumerable<ExchangeRecord>> GetExchangeRateAsync(string email, string token, DateTime? start = null, DateTime? end = null)
         {
             try
             {
