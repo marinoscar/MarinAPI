@@ -10,12 +10,12 @@ namespace BCCR.TipoDeCambio
         private const string BCCRUrl = "https://gee.bccr.fi.cr/Indicadores/Suscripciones/WS/wsindicadoreseconomicos.asmx/ObtenerIndicadoresEconomicos";
 
 
-        public static async Task<IEnumerable<ExchangeRecord>> GetExchangeRatesAsync(string email, string token)
+        public async Task<IEnumerable<ExchangeRecord>> GetExchangeRatesAsync(string email, string token)
         {
             return await GetExchangeRateAsync(email, token, DateTime.Today.AddDays(-3), null);
         }
 
-        public static async Task<IEnumerable<ExchangeRecord>> GetExchangeRateAsync(string email, string token, DateTime? start = null, DateTime? end = null)
+        public async Task<IEnumerable<ExchangeRecord>> GetExchangeRateAsync(string email, string token, DateTime? start = null, DateTime? end = null)
         {
             try
             {
@@ -35,10 +35,7 @@ namespace BCCR.TipoDeCambio
                 var recordsBuy = new Parser().ToList(compraXml, "buy");
                 var recordsSell = new Parser().ToList(ventaXml, "sale");
 
-                //double compra = ParseNumValor(compraXml);
-                //double venta = ParseNumValor(ventaXml);
-
-                return (0d, 0d);
+                return recordsBuy.Concat(recordsSell).ToList();
             }
             catch (Exception ex)
             {
@@ -59,14 +56,6 @@ namespace BCCR.TipoDeCambio
                 new KeyValuePair<string, string>("Token", token)
             });
             return compraPayload;
-        }
-
-        private static double ParseNumValor(string xmlContent)
-        {
-            var xmlDoc = new XmlDocument();
-            xmlDoc.LoadXml(xmlContent);
-            var valorNode = xmlDoc.GetElementsByTagName("NUM_VALOR")[0];
-            return Math.Round(double.Parse(valorNode.InnerText), 2);
         }
 
         private static string FormatDateOrToday(DateTime? inputDate)
