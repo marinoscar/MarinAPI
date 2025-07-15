@@ -22,6 +22,33 @@ namespace API.Controllers
         /// <param name="token">The API token for BCCR access.</param>
         private record Credentials(string email, string token);
 
+        ///<summary>
+        /// Retrieves exchange rates from BCCR for the specified date range.
+        /// </summary>
+        /// <param name="startDate">The start date of the range (inclusive).</param>
+        /// <param name="endDate">The end date of the range (inclusive).</param>
+        /// <returns>
+        /// An <see cref="IActionResult"/> containing the status, retrieved rates, operation duration, and the date range.
+        /// </returns>
+        /// <response code="200">Returns the exchange rates and operation details.</response>
+        [HttpGet("getrates")]
+        public async Task<IActionResult> GetRates(DateTime startDate, DateTime endDate)
+        {
+            var cred = GetCredentials();
+            var exchangeRates = new ExchangeRateBCCR();
+            var stopWatch = System.Diagnostics.Stopwatch.StartNew();
+            var rates = await exchangeRates.GetExchangeRateAsync(cred.email, cred.token, startDate, endDate);
+            return Ok(new
+            {
+                status = "Success",
+                rates,
+                duration = stopWatch.Elapsed.ToHumanReadableString(),
+                startDate,
+                endDate
+            });
+        }
+
+
         /// <summary>
         /// Retrieves exchange rates from the database for the specified date range.
         /// </summary>
@@ -31,8 +58,8 @@ namespace API.Controllers
         /// An <see cref="IActionResult"/> containing the status, retrieved values, operation duration, and the date range.
         /// </returns>
         /// <response code="200">Returns the exchange rates and operation details.</response>
-        [HttpGet("getrates")]
-        public async Task<IActionResult> GetRates(DateTime startDate, DateTime endDate)
+        [HttpGet("getratesfromdb")]
+        public async Task<IActionResult> GetRatesFromDb(DateTime startDate, DateTime endDate)
         {
             var stopWatch = System.Diagnostics.Stopwatch.StartNew();
             var values = await DbHelper.GetExchangeRateAsync(startDate, endDate);
