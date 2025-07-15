@@ -12,7 +12,7 @@ namespace BCCR.TipoDeCambio
 
         public async Task<IEnumerable<ExchangeRecord>> GetExchangeRatesAsync(string email, string token)
         {
-            return await GetExchangeRateAsync(email, token, DateTime.Today.AddDays(-3), null);
+            return await GetExchangeRateAsync(email, token, DateTime.Today, DateTime.Today);
         }
 
         public async Task<IEnumerable<ExchangeRecord>> GetExchangeRateAsync(string email, string token, DateTime? start = null, DateTime? end = null)
@@ -61,6 +61,10 @@ namespace BCCR.TipoDeCambio
         private static string FormatDateOrToday(DateTime? inputDate)
         {
             var dateToFormat = inputDate ?? DateTime.Today;
+            
+            if(dateToFormat.Year < 1970) 
+                dateToFormat = DateTime.Today;
+
             return dateToFormat.ToString("dd/MM/yyyy");
         }
     }
