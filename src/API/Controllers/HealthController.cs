@@ -7,10 +7,19 @@ using System.Net.NetworkInformation;
 
 namespace API.Controllers
 {
+    /// <summary>
+    /// Provides health check endpoints for the API.
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class HealthController : ControllerBase
     {
+        /// <summary>
+        /// Returns a simple liveness check indicating the API is running.
+        /// </summary>
+        /// <returns>
+        /// 200 OK with status and current UTC timestamp.
+        /// </returns>
         [HttpGet("live")]
         public IActionResult Live()
         {
@@ -21,6 +30,12 @@ namespace API.Controllers
             });
         }
 
+        /// <summary>
+        /// Performs a readiness check, including a database connectivity test.
+        /// </summary>
+        /// <returns>
+        /// 200 OK if the API and database are healthy, 503 if the database is unreachable.
+        /// </returns>
         [HttpGet("ready")]
         public IActionResult Ready()
         {
@@ -52,6 +67,13 @@ namespace API.Controllers
             });
         }
 
+        /// <summary>
+        /// Checks if the provided API key is valid.
+        /// Requires a valid API key in the request.
+        /// </summary>
+        /// <returns>
+        /// 200 OK if the API key is valid.
+        /// </returns>
         [ApiKeyAuthorize]
         [Tags("Secured")]
         [HttpGet("apikeycheck")]

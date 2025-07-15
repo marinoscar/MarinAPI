@@ -5,14 +5,31 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
+    /// <summary>
+    /// Controller for handling exchange rate operations with BCCR.
+    /// </summary>
     [Route("api/[controller]")]
     [ApiKeyAuthorize]
     [ApiController]
     [Tags("Secured")]
     public class TipoDeCambioController : ControllerBase
     {
+        /// <summary>
+        /// Represents credentials required for BCCR API access.
+        /// </summary>
+        /// <param name="email">The email associated with the BCCR account.</param>
+        /// <param name="token">The API token for BCCR access.</param>
         private record Credentials(string email, string token);
 
+        /// <summary>
+        /// Retrieves exchange rates from the database for the specified date range.
+        /// </summary>
+        /// <param name="startDate">The start date of the range (inclusive).</param>
+        /// <param name="endDate">The end date of the range (inclusive).</param>
+        /// <returns>
+        /// An <see cref="IActionResult"/> containing the status, retrieved values, operation duration, and the date range.
+        /// </returns>
+        /// <response code="200">Returns the exchange rates and operation details.</response>
         [HttpGet("getrates")]
         public async Task<IActionResult> GetRates(DateTime startDate, DateTime endDate)
         {
@@ -29,6 +46,15 @@ namespace API.Controllers
             });
         }
 
+        /// <summary>
+        /// Fetches exchange rates from BCCR and persists them to the database for the specified date range.
+        /// </summary>
+        /// <param name="startDate">The start date of the range (inclusive).</param>
+        /// <param name="endDate">The end date of the range (inclusive).</param>
+        /// <returns>
+        /// An <see cref="IActionResult"/> containing the status, number of affected rows, operation duration, and the date range.
+        /// </returns>
+        /// <response code="200">Returns the result of the persistence operation.</response>
         [HttpPost("persist")]
         public async Task<IActionResult> PersistAsync(DateTime startDate, DateTime endDate)
         {
@@ -47,6 +73,12 @@ namespace API.Controllers
             });
         }
 
+        /// <summary>
+        /// Retrieves BCCR API credentials from environment variables or uses default values.
+        /// </summary>
+        /// <returns>
+        /// A <see cref="Credentials"/> record containing the email and token.
+        /// </returns>
         private Credentials GetCredentials()
         {
             var email = Environment.GetEnvironmentVariable("BCCR_EMAIL") ?? "oscar@marin.cr";
