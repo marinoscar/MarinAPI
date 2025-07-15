@@ -11,9 +11,6 @@ namespace BCCR.TipoDeCambio
     {
         private const string DbName = "MarinAPI";
 
-        /// <summary>
-        /// Creates a PostgreSQL connection string using environment variables and the given database name.
-        /// </summary>
         public static string CreateConnectionString(string databaseName)
         {
             string? password = Environment.GetEnvironmentVariable("DB_PASSWORD");
@@ -33,25 +30,19 @@ namespace BCCR.TipoDeCambio
             return $"Host={server};Port={port};Username={user};Password={password};Database={databaseName};";
         }
 
-        public static string CreateConnectionString()
-        {
-            return CreateConnectionString(DbName);
-        }
+        public static string CreateConnectionString() => CreateConnectionString(DbName);
 
-        /// <summary>
-        /// Inserts or updates IndicatorRecords into the ExchangeRates table.
-        /// </summary>
         public static async Task<int> UpsertIndicatorsAsync(IEnumerable<ExchangeRecord> records)
         {
             if (records == null) throw new ArgumentNullException(nameof(records));
 
             const string upsertSql = @"
-            INSERT INTO ""ExchangeRates"" (""Code"", ""TypeId"", ""Type"", ""Name"", ""Value"", ""Date"")
-            VALUES (@Code, @TypeId, @Type, @Name, @Value, @Date)
-            ON CONFLICT (""Code"", ""TypeId"", ""Date"") DO UPDATE
-            SET ""Type"" = EXCLUDED.""Type"",
-                ""Name"" = EXCLUDED.""Name"",
-                ""Value"" = EXCLUDED.""Value"";";
+        INSERT INTO ""ExchangeRates"" (""Code"", ""TypeId"", ""Type"", ""Name"", ""Value"", ""Date"")
+        VALUES (@Code, @TypeId, @Type, @Name, @Value, @Date)
+        ON CONFLICT (""Code"", ""TypeId"", ""Date"") DO UPDATE
+        SET ""Type"" = EXCLUDED.""Type"",
+            ""Name"" = EXCLUDED.""Name"",
+            ""Value"" = EXCLUDED.""Value"";";
 
             int affectedRows = 0;
 
@@ -82,7 +73,7 @@ namespace BCCR.TipoDeCambio
             return affectedRows;
         }
 
-        public static IEnumerable<ExchangeRecord> GetIndicators(DateTime? startDate, DateTime? endDate)
+        public static async Task<IEnumerable<ExchangeRecord>> GetIndicatorsAsync(DateTime? startDate, DateTime? endDate)
         {
             DateTime from = startDate ?? DateTime.Today;
             DateTime to = endDate ?? DateTime.Today;
@@ -100,16 +91,16 @@ namespace BCCR.TipoDeCambio
 
             try
             {
-                using var conn = new NpgsqlConnection(CreateConnectionString());
-                conn.Open();
+                await using var conn = new NpgsqlConnection(CreateConnectionString());
+                await conn.OpenAsync();
 
-                using var cmd = new NpgsqlCommand(query, conn);
+                await using var cmd = new NpgsqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@StartDate", from);
                 cmd.Parameters.AddWithValue("@EndDate", to);
 
-                using var reader = cmd.ExecuteReader();
+                await using var reader = await cmd.ExecuteReaderAsync();
 
-                while (reader.Read())
+                while (await reader.ReadAsync())
                 {
                     int code = reader.GetInt32(0);
                     int typeId = reader.GetInt32(1);
@@ -123,7 +114,7 @@ namespace BCCR.TipoDeCambio
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine($"[ERROR] Failed to query ExchangeRates: {ex.Message}");
+                Console.Error.WriteLine($"[ERROR] Query failed: {ex.Message}");
                 throw;
             }
 
