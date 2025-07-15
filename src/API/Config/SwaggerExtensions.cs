@@ -1,4 +1,5 @@
 ﻿using Microsoft.OpenApi.Models;
+using System.Reflection;
 
 namespace API.Config
 {
@@ -11,8 +12,12 @@ namespace API.Config
                 c.SwaggerDoc("v1", new OpenApiInfo
                 {
                     Title = "My API",
-                    Version = "v1"
+                    Version = "v1",
+                    Description = "An API to manage exchange rates securely with API key authentication."
                 });
+
+                // Enable XML comments from code documentation
+                IncludeXmlComments(c);
 
                 // Define the API Key header
                 c.AddSecurityDefinition("ApiKey", new OpenApiSecurityScheme
@@ -26,23 +31,37 @@ namespace API.Config
 
                 // Apply the security requirement globally
                 c.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
                 {
+                    new OpenApiSecurityScheme
                     {
-                        new OpenApiSecurityScheme
+                        Reference = new OpenApiReference
                         {
-                            Reference = new OpenApiReference
-                            {
-                                Type = ReferenceType.SecurityScheme,
-                                Id = "ApiKey"
-                            },
-                            In = ParameterLocation.Header
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "ApiKey"
                         },
-                        new List<string>()
-                    }
-                });
+                        In = ParameterLocation.Header
+                    },
+                    new List<string>()
+                }
+            });
             });
 
             return services;
+        }
+
+        /// <summary>
+        /// Adds XML documentation comments to Swagger (for method/property descriptions).
+        /// </summary>
+        private static void IncludeXmlComments(Swashbuckle.AspNetCore.SwaggerGen.SwaggerGenOptions options)
+        {
+            var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+            var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+
+            if (File.Exists(xmlPath))
+            {
+                options.IncludeXmlComments(xmlPath, includeControllerXmlComments: true);
+            }
         }
     }
 }
