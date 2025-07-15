@@ -10,8 +10,6 @@ namespace BCCR.TipoDeCambio
 {
     public class Parser
     {
-        public record IndicatorRecord(int Code, int TypeId, string Type,  string? Name, double Value, DateTime Date);
-
         public List<IndicatorRecord> ToList(string xml, string type)
         {
             var nsDiffgr = XNamespace.Get("urn:schemas-microsoft-com:xml-diffgram-v1");
