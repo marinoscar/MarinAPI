@@ -41,7 +41,7 @@ namespace BCCR.TipoDeCambio
         /// <summary>
         /// Inserts or updates IndicatorRecords into the ExchangeRates table.
         /// </summary>
-        public static async Task<int> UpsertIndicatorsAsync(IEnumerable<IndicatorRecord> records)
+        public static async Task<int> UpsertIndicatorsAsync(IEnumerable<ExchangeRecord> records)
         {
             if (records == null) throw new ArgumentNullException(nameof(records));
 
@@ -82,7 +82,7 @@ namespace BCCR.TipoDeCambio
             return affectedRows;
         }
 
-        public static IEnumerable<IndicatorRecord> GetIndicators(DateTime? startDate, DateTime? endDate)
+        public static IEnumerable<ExchangeRecord> GetIndicators(DateTime? startDate, DateTime? endDate)
         {
             DateTime from = startDate ?? DateTime.Today;
             DateTime to = endDate ?? DateTime.Today;
@@ -96,7 +96,7 @@ namespace BCCR.TipoDeCambio
         WHERE ""Date"" BETWEEN @StartDate AND @EndDate
         ORDER BY ""Date"", ""Code"", ""TypeId"";";
 
-            var results = new List<IndicatorRecord>();
+            var results = new List<ExchangeRecord>();
 
             try
             {
@@ -118,7 +118,7 @@ namespace BCCR.TipoDeCambio
                     double value = reader.GetDouble(4);
                     DateTime date = reader.GetDateTime(5);
 
-                    results.Add(new IndicatorRecord(code, typeId, type, name, value, date));
+                    results.Add(new ExchangeRecord(code, typeId, type, name, value, date));
                 }
             }
             catch (Exception ex)

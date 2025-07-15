@@ -10,7 +10,7 @@ namespace BCCR.TipoDeCambio
 {
     public class Parser
     {
-        public List<IndicatorRecord> ToList(string xml, string type)
+        public List<ExchangeRecord> ToList(string xml, string type)
         {
             var nsDiffgr = XNamespace.Get("urn:schemas-microsoft-com:xml-diffgram-v1");
             var document = XDocument.Parse(xml);
@@ -24,7 +24,7 @@ namespace BCCR.TipoDeCambio
                         double value = double.Parse(el.Element("NUM_VALOR")?.Value ?? "0", CultureInfo.InvariantCulture);
                         DateTime date = DateTime.Parse(el.Element("DES_FECHA")?.Value ?? DateTime.Now.ToString());
 
-                        return new IndicatorRecord(code, type.ToLowerInvariant() == "buy" ? 1 : 2, type, Mapping.GetName(code),  value, date);
+                        return new ExchangeRecord(code, type.ToLowerInvariant() == "buy" ? 1 : 2, type, Mapping.GetName(code),  value, date);
                     }
                     catch
                     {
