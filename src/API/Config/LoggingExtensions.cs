@@ -10,7 +10,7 @@ namespace API.Config
         {
             var dbTableName = Environment.GetEnvironmentVariable("DB_TABLENAME") ?? "serilogs";
 
-            var connectionString = DbHelper.GetConnectionString();
+            var connectionString = ConnStringHelper.GetConnectionString();
 
             var columnWriters = new Dictionary<string, ColumnWriterBase>
             {

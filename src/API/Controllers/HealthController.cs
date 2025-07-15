@@ -42,7 +42,7 @@ namespace API.Controllers
             var dbStatus = "Unknown";
             try
             {
-                var connString = DbHelper.GetConnectionString();
+                var connString = ConnStringHelper.GetConnectionString();
 
                 using var conn = new NpgsqlConnection(connString);
                 conn.Open();

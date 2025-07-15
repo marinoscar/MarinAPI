@@ -1,6 +1,6 @@
 ﻿namespace API.Config
 {
-    public class DbHelper
+    public class ConnStringHelper
     {
         public static string GetConnectionString()
         {
