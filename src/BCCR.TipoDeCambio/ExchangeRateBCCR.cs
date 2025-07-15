@@ -2,7 +2,7 @@
 
 namespace BCCR.TipoDeCambio
 {
-    public class IndicadoresEconomicosBCCR
+    public class ExchangeRateBCCR
     {
         //doc: https://gee.bccr.fi.cr/indicadoreseconomicos/Documentos/DocumentosMetodologiasNotasTecnicas/Webservices_de_indicadores_economicos.pdf
 
@@ -10,12 +10,12 @@ namespace BCCR.TipoDeCambio
         private const string BCCRUrl = "https://gee.bccr.fi.cr/Indicadores/Suscripciones/WS/wsindicadoreseconomicos.asmx/ObtenerIndicadoresEconomicos";
 
 
-        public static async Task<(double compra, double venta)> ObtenerTipoDeCambio(string email, string token)
+        public static async Task<(double compra, double venta)> GetExchangeRatesAsync(string email, string token)
         {
-            return await ObtenerTipoDeCambio(email, token, null, null);
+            return await GetExchangeRateAsync(email, token, DateTime.Today.AddDays(-3), null);
         }
 
-        public static async Task<(double compra, double venta)> ObtenerTipoDeCambio(string email, string token, DateTime? start = null, DateTime? end = null)
+        public static async Task<(double compra, double venta)> GetExchangeRateAsync(string email, string token, DateTime? start = null, DateTime? end = null)
         {
             try
             {
