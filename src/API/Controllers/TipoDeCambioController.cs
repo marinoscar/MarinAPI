@@ -1,4 +1,5 @@
-﻿using API.Filters;
+﻿using API.Config;
+using API.Filters;
 using BCCR.TipoDeCambio;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -40,7 +41,7 @@ namespace API.Controllers
             {
                 status = "Success",
                 values,
-                duration = stopWatch.ElapsedMilliseconds,
+                duration = stopWatch.Elapsed.ToHumanReadableString(),
                 startDate,
                 endDate
             });
@@ -67,7 +68,7 @@ namespace API.Controllers
             {
                 status = "Success",
                 affectedRows,
-                duration = stopWatch.ElapsedMilliseconds,
+                duration = stopWatch.Elapsed.ToHumanReadableString(),
                 startDate,
                 endDate
             });
