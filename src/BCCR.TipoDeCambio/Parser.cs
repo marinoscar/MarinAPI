@@ -10,7 +10,7 @@ namespace BCCR.TipoDeCambio
 {
     public class Parser
     {
-        public record IndicatorRecord(int Code, string type,  string? Name, double Value, DateTime Date);
+        public record IndicatorRecord(int Code, int TypeId, string Type,  string? Name, double Value, DateTime Date);
 
         public List<IndicatorRecord> ToList(string xml, string type)
         {
@@ -26,7 +26,7 @@ namespace BCCR.TipoDeCambio
                         double value = double.Parse(el.Element("NUM_VALOR")?.Value ?? "0", CultureInfo.InvariantCulture);
                         DateTime date = DateTime.Parse(el.Element("DES_FECHA")?.Value ?? DateTime.Now.ToString());
 
-                        return new IndicatorRecord(code, type, Mapping.GetName(code),  value, date);
+                        return new IndicatorRecord(code, type.ToLowerInvariant() == "buy" ? 1 : 2, type, Mapping.GetName(code),  value, date);
                     }
                     catch
                     {
