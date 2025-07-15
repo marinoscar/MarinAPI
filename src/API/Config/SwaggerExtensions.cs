@@ -5,7 +5,7 @@ namespace API.Config
 {
     public static class SwaggerExtensions
     {
-        public static IServiceCollection AddSwaggerWithApiKey(this IServiceCollection services)
+        public static IServiceCollection AddSwaggerExtensions(this IServiceCollection services)
         {
             services.AddSwaggerGen(c =>
             {

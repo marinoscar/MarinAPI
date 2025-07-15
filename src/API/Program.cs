@@ -20,7 +20,7 @@ namespace API
 
             // Add swagger
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerWithApiKey();
+            builder.Services.AddSwaggerExtensions();
 
             //adds logging
             builder.Host.ConfigureSerilogLogging();
