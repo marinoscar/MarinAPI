@@ -9,7 +9,7 @@ namespace BCCR.TipoDeCambio
 {
     public static class DbHelper
     {
-        private const string DbName = "MarinAPI";
+        private const string DbName = "marinapi";
 
         public static string CreateConnectionString(string databaseName)
         {
@@ -32,7 +32,7 @@ namespace BCCR.TipoDeCambio
 
         public static string CreateConnectionString() => CreateConnectionString(DbName);
 
-        public static async Task<int> UpsertIndicatorsAsync(IEnumerable<ExchangeRecord> records)
+        public static async Task<int> UpsertExchangeRateAsync(IEnumerable<ExchangeRecord> records)
         {
             if (records == null) throw new ArgumentNullException(nameof(records));
 
@@ -73,7 +73,7 @@ namespace BCCR.TipoDeCambio
             return affectedRows;
         }
 
-        public static async Task<IEnumerable<ExchangeRecord>> GetIndicatorsAsync(DateTime? startDate, DateTime? endDate)
+        public static async Task<IEnumerable<ExchangeRecord>> GetExchangeRateAsync(DateTime? startDate, DateTime? endDate)
         {
             DateTime from = startDate ?? DateTime.Today;
             DateTime to = endDate ?? DateTime.Today;
