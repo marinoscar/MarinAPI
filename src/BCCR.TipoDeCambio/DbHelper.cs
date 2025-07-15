@@ -78,6 +78,9 @@ namespace BCCR.TipoDeCambio
             DateTime from = startDate ?? DateTime.Today;
             DateTime to = endDate ?? DateTime.Today;
 
+            if (from.Year < 1970) from = DateTime.Today;
+            if (to.Year < 1970) to = DateTime.Today;
+
             if (from > to)
                 throw new ArgumentException("Start date cannot be later than end date.");
 
