@@ -13,7 +13,14 @@ namespace BCCR.TipoDeCambio
         public static async Task<string> GetHtmlAsync(DateTime startDate, DateTime endDate)
         {
             var data = await DbHelper.GetExchangeRateAsync(startDate, endDate);
-            var json = JsonSerializer.Serialize(new { values = data });
+            var json = JsonSerializer.Serialize(new
+            {
+                status = "Success",
+                values = data,
+                duration = TimeSpan.Zero,
+                startDate,
+                endDate
+            });
             return GetHtml(json);
         }
 
@@ -22,7 +29,7 @@ namespace BCCR.TipoDeCambio
             if (string.IsNullOrWhiteSpace(jsonData))
                 throw new ArgumentException("JSON data cannot be null or empty.", nameof(jsonData));
             // Replace @@JSON@@ with the actual JSON data
-            return HtmlTemplate.Replace("@@JSON@@", jsonData);
+            return HtmlTemplate.Replace("$$VALUES$$", jsonData);
         }
 
         private const string HtmlTemplate = @"
@@ -289,7 +296,7 @@ namespace BCCR.TipoDeCambio
   </div>
   <script>
     // ==== INSERT YOUR JSON DATA HERE ====
-    const json = @@JSON@@;
+    const json = $$VALUES$$;
     // ==== END JSON DATA ====
 
     function pad(n) { return n < 10 ? '0'+n : n; }
