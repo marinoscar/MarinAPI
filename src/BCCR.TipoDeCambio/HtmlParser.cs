@@ -2,12 +2,29 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace BCCR.TipoDeCambio
 {
     public class HtmlParser
     {
+
+        public static async Task<string> GetHtmlAsync(DateTime startDate, DateTime endDate)
+        {
+            var data = await DbHelper.GetExchangeRateAsync(startDate, endDate);
+            var json = JsonSerializer.Serialize(new { values = data });
+            return GetHtml(json);
+        }
+
+        public static string GetHtml(string jsonData)
+        {
+            if (string.IsNullOrWhiteSpace(jsonData))
+                throw new ArgumentException("JSON data cannot be null or empty.", nameof(jsonData));
+            // Replace @@JSON@@ with the actual JSON data
+            return HtmlTemplate.Replace("@@JSON@@", jsonData);
+        }
+
         private const string HtmlTemplate = @"
 <!DOCTYPE html>
 <html lang=""en"">
