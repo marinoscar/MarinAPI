@@ -13,6 +13,11 @@ namespace BCCR.TipoDeCambio
         public static async Task<string> GetHtmlAsync(DateTime startDate, DateTime endDate)
         {
             var data = await DbHelper.GetExchangeRateAsync(startDate, endDate);
+            var options = new JsonSerializerOptions
+            {
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase, // For camel case property names
+                WriteIndented = true // For indented output
+            };
             var json = JsonSerializer.Serialize(new
             {
                 status = "Success",
@@ -20,7 +25,7 @@ namespace BCCR.TipoDeCambio
                 duration = TimeSpan.Zero,
                 startDate,
                 endDate
-            });
+            }, options);
             return GetHtml(json);
         }
 
