@@ -104,10 +104,8 @@ namespace API.Controllers
         }
 
         /// <summary>
-        /// Generates an HTML chart representing exchange rates for the specified date range.
+        /// Generates an HTML chart representing exchange rates for 30 days
         /// </summary>
-        /// <param name="startDate">The start date of the range (inclusive).</param>
-        /// <param name="endDate">The end date of the range (inclusive).</param>
         /// <returns>
         /// A <see cref="ContentResult"/> containing the generated HTML chart, with a status code of 200 and content type "text/html".
         /// </returns>
@@ -115,11 +113,13 @@ namespace API.Controllers
         /// This endpoint retrieves exchange rate data for the given date range and returns a visual chart in HTML format.
         /// The operation duration is measured internally but not returned in the response.
         /// </remarks>
-        /// <response code="200">Returns the HTML chart for the requested date range.</response>
+        /// <response code="200">Returns the HTML chart for 30 days.</response>
         [HttpGet("getratechart")]
-        public async Task<ContentResult> GetRateChart(DateTime startDate, DateTime endDate)
+        public async Task<ContentResult> GetRateChart()
         {
             var stopWatch = System.Diagnostics.Stopwatch.StartNew();
+            var startDate = DateTime.Today.AddDays(-30); // Default to last 30 days
+            var endDate = DateTime.Today.AddDays(1); // Default to today
             var html = await HtmlParser.GetHtmlAsync(startDate, endDate);
             stopWatch.Stop();
             return new ContentResult
