@@ -10,7 +10,6 @@ namespace API.Controllers
     /// Controller for handling exchange rate operations with BCCR.
     /// </summary>
     [Route("api/[controller]")]
-    [ApiKeyAuthorize]
     [ApiController]
     [Tags("Secured")]
     public class TipoDeCambioController : ControllerBase
@@ -31,6 +30,7 @@ namespace API.Controllers
         /// An <see cref="IActionResult"/> containing the status, retrieved rates, operation duration, and the date range.
         /// </returns>
         /// <response code="200">Returns the exchange rates and operation details.</response>
+        [ApiKeyAuthorize]
         [HttpGet("getrates")]
         public async Task<IActionResult> GetRates(DateTime startDate, DateTime endDate)
         {
@@ -58,6 +58,7 @@ namespace API.Controllers
         /// An <see cref="IActionResult"/> containing the status, retrieved values, operation duration, and the date range.
         /// </returns>
         /// <response code="200">Returns the exchange rates and operation details.</response>
+        [ApiKeyAuthorize]
         [HttpGet("getratesfromdb")]
         public async Task<IActionResult> GetRatesFromDb(DateTime startDate, DateTime endDate)
         {
@@ -83,6 +84,7 @@ namespace API.Controllers
         /// An <see cref="IActionResult"/> containing the status, number of affected rows, operation duration, and the date range.
         /// </returns>
         /// <response code="200">Returns the result of the persistence operation.</response>
+        [ApiKeyAuthorize]
         [HttpPost("persist")]
         public async Task<IActionResult> PersistAsync(DateTime startDate, DateTime endDate)
         {
@@ -99,6 +101,33 @@ namespace API.Controllers
                 startDate,
                 endDate
             });
+        }
+
+        /// <summary>
+        /// Generates an HTML chart representing exchange rates for the specified date range.
+        /// </summary>
+        /// <param name="startDate">The start date of the range (inclusive).</param>
+        /// <param name="endDate">The end date of the range (inclusive).</param>
+        /// <returns>
+        /// A <see cref="ContentResult"/> containing the generated HTML chart, with a status code of 200 and content type "text/html".
+        /// </returns>
+        /// <remarks>
+        /// This endpoint retrieves exchange rate data for the given date range and returns a visual chart in HTML format.
+        /// The operation duration is measured internally but not returned in the response.
+        /// </remarks>
+        /// <response code="200">Returns the HTML chart for the requested date range.</response>
+        [HttpGet("getratechart")]
+        public async Task<ContentResult> GetRateChart(DateTime startDate, DateTime endDate)
+        {
+            var stopWatch = System.Diagnostics.Stopwatch.StartNew();
+            var html = await HtmlParser.GetHtmlAsync(startDate, endDate);
+            stopWatch.Stop();
+            return new ContentResult
+            {
+                ContentType = "text/html",
+                StatusCode = 200,
+                Content = html
+            };
         }
 
         /// <summary>
