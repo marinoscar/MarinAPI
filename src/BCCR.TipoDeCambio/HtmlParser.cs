@@ -173,9 +173,12 @@ namespace BCCR.TipoDeCambio
     // ==== END JSON DATA ====
 
     function pad(n) { return n < 10 ? '0' + n : n; }
+
     function formatDateDDMMYYYY(dateString) {
-      const d = new Date(dateString);
-      return `${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${d.getFullYear()}`;
+      // Remove time if present
+      const [datePart] = dateString.split('T');
+      const [year, month, day] = datePart.split('-');
+      return `${day}/${parseInt(month)}/${year}`;
     }
 
     let data = json.values;
@@ -196,7 +199,7 @@ namespace BCCR.TipoDeCambio
     function getChartDataForBank(days, type, bank) {
       const today = new Date();
       const cutoff = new Date(today);
-      cutoff.setDate(today.getDate() - days + 1);
+      cutoff.setDate(today.getDate() - days);
 
       let filtered = data.filter(
         v => (!bank || v.name === bank) && new Date(v.date) >= cutoff && v.type === type
