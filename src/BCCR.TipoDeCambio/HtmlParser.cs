@@ -21,7 +21,7 @@ namespace BCCR.TipoDeCambio
             var json = JsonSerializer.Serialize(new
             {
                 status = "Success",
-                values = data.Where(i => i.Name != "null").ToList(),
+                values = data.Where(i => i.Name != "null" || !string.IsNullOrEmpty(i.Name)).ToList(),
                 duration = TimeSpan.Zero,
                 startDate,
                 endDate
