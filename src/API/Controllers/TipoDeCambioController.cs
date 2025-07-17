@@ -120,8 +120,8 @@ namespace API.Controllers
         {
             if (date == null || date.Value.Year <= 1970) date = DateTime.Today.Date;
             var stopWatch = System.Diagnostics.Stopwatch.StartNew();
-            var startDate = date.Value.AddDays(-30); // Default to last 30 days
-            var endDate = date.Value.AddDays(1); // Default to today
+            var startDate = date.Value.AddDays(-30).Date; // Default to last 30 days
+            var endDate = date.Value.AddDays(1).Date; // Default to today
             var html = await HtmlParser.GetHtmlAsync(startDate, endDate);
             stopWatch.Stop();
             return new ContentResult
