@@ -85,9 +85,9 @@ namespace BCCR.TipoDeCambio
                 throw new ArgumentException("Start date cannot be later than end date.");
 
             const string query = @"
-        SELECT ""Code"", ""TypeId"", ""Type"", ""Name"", ""Value"", ""Date""
+        SELECT ""Code"", ""TypeId"", ""Type"", ""Name"", ""Value"", date(""Date"") As ""Date""
         FROM ""ExchangeRates""
-        WHERE ""Date"" BETWEEN @StartDate AND @EndDate
+        WHERE ""Date"" >= @StartDate AND ""Date"" <= @EndDate
         ORDER BY ""Date"", ""Code"", ""TypeId"";";
 
             var results = new List<ExchangeRecord>();
