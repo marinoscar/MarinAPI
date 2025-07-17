@@ -42,478 +42,373 @@ namespace BCCR.TipoDeCambio
 <html lang=""en"">
 <head>
   <meta charset=""UTF-8"">
-  <title>Tipo de Cambio por Banco (Responsive)</title>
+  <title>Tipo de Cambio por Banco (Bootstrap Dark)</title>
   <meta name=""viewport"" content=""width=device-width, initial-scale=1, maximum-scale=1"">
+  <!-- Bootstrap 5 Dark CSS -->
+  <link href=""https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"" rel=""stylesheet"">
   <script src=""https://cdn.jsdelivr.net/npm/chart.js""></script>
+  <!-- DataTables for Bootstrap -->
+  <link rel=""stylesheet"" href=""https://cdn.datatables.net/2.0.7/css/dataTables.bootstrap5.min.css"">
+  <script src=""https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js""></script>
+  <script src=""https://cdn.datatables.net/2.0.7/js/dataTables.min.js""></script>
+  <script src=""https://cdn.datatables.net/2.0.7/js/dataTables.bootstrap5.min.js""></script>
   <style>
-    :root {
-      --background: #181a20;
-      --surface: #23272f;
-      --primary: #16e0b1;
-      --primary-light: #16e0b188;
-      --text-main: #eef1f5;
-      --text-muted: #bfc6d1;
-      --button-bg: #23272f;
-      --button-active: #31353f;
-      --button-border: #31353f;
-      --button-hover: #353b47;
-      --button-selected: #16e0b1;
-      --shadow: 0 4px 32px #0005, 0 2px 8px #0002;
+    body { background-color: #181a20; color: #eef1f5; }
+    .card { background: #23272f; border-radius: 1.5rem; }
+    h2, h5 { color: #eef1f5 !important; }
+    .btn-group .btn.active { background-color: #16e0b1 !important; color: #181a20 !important; border-color: #16e0b1 !important;}
+    .btn-outline-info { color: #16e0b1 !important; border-color: #16e0b1 !important;}
+    .btn-outline-info:hover, .btn-outline-info:focus { background-color: #16e0b1 !important; color: #181a20 !important;}
+    /* Table header and cell text colors */
+    .table-dark thead th { color: #16e0b1 !important; background-color: #23272f !important; }
+    .table-dark th, .table-dark td { color: #eef1f5 !important; background-color: #23272f !important;}
+    .table-dark tbody tr { border-bottom: 1px solid #31353f !important; }
+    .dataTables_wrapper .dataTables_paginate .paginate_button { color: #16e0b1 !important; }
+    label.form-check-label, .form-switch .form-check-input:checked { color: #16e0b1 !important; }
+    #toggleLabel { color: #16e0b1 !important; font-weight: bold;}
+    .dataTables_empty { color: #bfc6d1 !important; }
+    .form-switch .form-check-input {
+      background-color: #23272f !important;
+      border-color: #16e0b1 !important;
     }
-    html, body {
-      background: var(--background);
-      color: var(--text-main);
-      font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
-      height: 100%;
-      min-height: 100%;
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      width: 100vw;
-      overflow-x: hidden;
+    .form-switch .form-check-input:checked {
+      background-color: #16e0b1 !important;
+      border-color: #16e0b1 !important;
     }
-    .main-container {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-      align-items: center;
-      width: 100vw;
-      box-sizing: border-box;
-    }
-    .card {
-      margin: 36px 0 0 0;
-      background: var(--surface);
-      border-radius: 22px;
-      box-shadow: var(--shadow);
-      padding: 2.5vw 2vw 2vw 2vw;
-      max-width: 96vw;
-      width: 100%;
-      min-width: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: stretch;
-      box-sizing: border-box;
-    }
-    h2 {
-      margin-top: 0;
-      margin-bottom: 20px;
-      font-size: clamp(1.2rem, 4vw, 2.2rem);
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      color: var(--text-main);
-      text-align: left;
-    }
-    .controls-bar {
-      display: flex;
-      gap: 0.7em;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: flex-start;
-      margin-bottom: 1.3em;
-      width: 100%;
-    }
-    .bank-select-label {
-      font-size: 1rem;
-      color: var(--text-muted);
-      margin-right: 0.5em;
-      font-weight: 500;
-    }
-    select {
-      background: var(--surface);
-      color: var(--text-main);
-      border: 1px solid var(--button-border);
-      border-radius: 8px;
-      padding: 8px 12px;
-      font-size: 1.05rem;
-      min-width: 160px;
-      max-width: 240px;
-      font-family: inherit;
-      margin-right: 1em;
-      appearance: none;
-      box-shadow: 0 1px 2px #0002;
-    }
-    .dark-btn-group {
-      display: flex;
-      gap: 2px;
-      margin-left: auto;
-    }
-    .dark-btn {
-      background: var(--button-bg);
-      color: var(--text-muted);
-      border: 1px solid var(--button-border);
-      border-radius: 8px;
-      padding: 7px 18px;
-      font-size: 1rem;
+    .bank-link {
+      color: #16e0b1 !important;
+      text-decoration: underline;
       cursor: pointer;
       font-weight: 500;
-      transition: all 0.18s;
-      margin: 0;
-      outline: none;
-      min-width: 50px;
-      margin-right: 0px;
     }
-    .dark-btn.selected,
-    .dark-btn:active {
-      color: var(--button-selected);
-      background: var(--button-active);
-      border-color: var(--button-selected);
-      z-index: 1;
+    .bank-link.selected {
+      color: #8b5cf6 !important;
     }
-    .dark-btn:hover {
-      background: var(--button-hover);
-      color: var(--button-selected);
-    }
-    .toggle-bar {
-      display: flex;
-      align-items: center;
-      gap: 0.5em;
-      margin-right: 1em;
-    }
-    .toggle-label {
-      font-size: 1.05em;
-      color: var(--text-muted);
-      margin-right: 0.2em;
-    }
-    .switch {
-      position: relative;
-      display: inline-block;
-      width: 48px;
-      height: 26px;
-    }
-    .switch input { display: none; }
-    .slider {
-      position: absolute;
-      cursor: pointer;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background-color: #1d2027;
-      transition: .3s;
-      border-radius: 20px;
-      border: 1.5px solid #2b2e37;
-    }
-    .slider:before {
-      position: absolute;
-      content: """";
-      height: 19px;
-      width: 19px;
-      left: 4px;
-      bottom: 3.1px;
-      background-color: var(--primary);
-      transition: .3s;
-      border-radius: 50%;
-      box-shadow: 0 2px 6px #16e0b133;
-    }
-    input:checked + .slider {
-      background-color: #132d2a;
-      border-color: var(--primary);
-    }
-    input:checked + .slider:before {
-      transform: translateX(20px);
-      background: #8b5cf6;
-    }
-    .toggle-label-compra, .toggle-label-venta {
-      font-weight: 600;
-      font-size: 1.02em;
-      color: var(--primary);
-      margin: 0 0.22em 0 0.22em;
-      opacity: 0.85;
-      transition: color 0.15s;
-      cursor: pointer;
-      user-select: none;
-    }
-    .toggle-label-venta {
+    .chart-no-data {
       color: #8b5cf6;
-    }
-    .toggle-label-compra.inactive, .toggle-label-venta.inactive {
-      color: var(--text-muted);
-      opacity: 0.58;
-    }
-    .chart-container {
-      width: 100%;
-      min-width: 0;
-      min-height: 230px;
-      flex-grow: 1;
-      background: var(--background);
-      border-radius: 13px;
-      box-shadow: 0 1px 6px #0006;
-      padding: 12px 10px 18px 10px;
-      margin: 0 auto 0 auto;
-      box-sizing: border-box;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    canvas {
-      width: 100% !important;
-      max-width: 100vw;
-      height: 320px !important;
-      min-height: 180px;
-      background: transparent;
-      border-radius: 12px;
-    }
-    #loading {
-      margin-top: 1em;
-      color: var(--text-muted);
+      font-size: 1.1em;
+      font-weight: 600;
       text-align: center;
+      margin-top: 60px;
     }
-    @media (max-width: 600px) {
-      .card { padding: 2vw 2vw 3vw 2vw; margin-top: 12px;}
-      h2 { font-size: 1.18rem; }
-      .controls-bar { flex-direction: column; align-items: stretch; gap: 0.85em;}
-      .toggle-bar, .bank-select-label { margin-bottom: 0; }
-      .chart-container { min-height: 150px;}
-      select { font-size: 0.97rem; min-width: 120px;}
-      .dark-btn { padding: 7px 11px; font-size: 0.93em;}
+    #bankSummary {
+      margin-bottom: 18px;
+      font-size: 1.09em;
     }
-    @media (max-width: 370px) {
-      .controls-bar { gap: 0.42em; }
-      .card { padding: 1vw; }
-      select { min-width: 100px; }
-    }
+    #bankSummary .bank-name { color: #8b5cf6; font-weight: bold; }
+    #bankSummary .rate-buy { color: #16e0b1; font-weight: bold; margin-left: 1em;}
+    #bankSummary .rate-sale { color: #8b5cf6; font-weight: bold; margin-left: 1em;}
+	
+	/* Style DataTables search box for dark mode */
+.dataTables_filter input[type=""search""] {
+  background-color: #23272f !important;
+  color: #16e0b1 !important;
+  border: 1.5px solid #16e0b1 !important;
+  border-radius: 0.5em;
+  padding: 0.45em 1.1em;
+  font-size: 1em;
+  margin-left: 0.5em;
+  outline: none;
+  min-width: 260px !important;   /* Wider input */
+  width: 320px !important;       /* Set your preferred width */
+  box-shadow: none !important;
+  transition: box-shadow 0.2s;
+}
+.dataTables_filter input[type=""search""]::placeholder {
+  color: #16e0b1 !important;
+  opacity: 0.95;
+}
+.dataTables_filter input[type=""search""]:focus {
+  box-shadow: 0 0 0 2px #16e0b1;
+  background-color: #1a1b20 !important;
+}
+	
   </style>
 </head>
-<body>
-  <div class=""main-container"">
-    <div class=""card"">
-      <h2>Tipo de Cambio por Banco</h2>
-      <div class=""controls-bar"">
-        <span class=""bank-select-label"">Banco:</span>
-        <select id=""bankSelect""></select>
-        <div class=""toggle-bar"">
-          <span id=""labelCompra"" class=""toggle-label-compra"">Compra</span>
-          <label class=""switch"">
-            <input id=""toggleType"" type=""checkbox"">
-            <span class=""slider""></span>
-          </label>
-          <span id=""labelVenta"" class=""toggle-label-venta inactive"">Venta</span>
+<body class=""bg-dark text-light"">
+  <div class=""container my-5"">
+    <div class=""card p-4 shadow"">
+      <h2 class=""mb-4"">Tipo de Cambio por Banco</h2>
+      <div id=""bankSummary""></div>
+      <div class=""d-flex flex-wrap align-items-center mb-4 gap-2"">
+        <div class=""form-check form-switch"">
+          <input class=""form-check-input"" type=""checkbox"" id=""toggleType"">
+          <label class=""form-check-label"" id=""toggleLabel"" for=""toggleType"">Compra</label>
         </div>
-        <div class=""dark-btn-group"">
-          <button id=""btn1d"" class=""dark-btn"">1D</button>
-          <button id=""btn7d"" class=""dark-btn"">7D</button>
-          <button id=""btn30d"" class=""dark-btn selected"">1M</button>
+        <div class=""btn-group ms-auto"" role=""group"" aria-label=""Range selection"">
+          <button type=""button"" class=""btn btn-outline-info"" id=""btn1d"">1D</button>
+          <button type=""button"" class=""btn btn-outline-info"" id=""btn7d"">7D</button>
+          <button type=""button"" class=""btn btn-outline-info active"" id=""btn30d"">1M</button>
         </div>
       </div>
-      <div class=""chart-container"">
+      <div style=""min-height:260px; position: relative;"">
         <canvas id=""ratesChart""></canvas>
+        <div id=""chartNoData"" class=""chart-no-data"" style=""display:none; position:absolute;top:30%;left:0;width:100%;""></div>
       </div>
-      <div id=""loading""></div>
+      <div id=""loading"" class=""my-2""></div>
+      <div class=""mt-4"">
+        <h5 class=""mb-3"">Último Tipo de Cambio (por banco)</h5>
+        <div class=""table-responsive"">
+          <table id=""ratesTable"" class=""table table-dark table-striped table-bordered w-100"">
+            <thead>
+              <tr>
+                <th>Banco</th>
+                <th>Fecha</th>
+                <th>Compra</th>
+                <th>Venta</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Data loads here -->
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   </div>
+
   <script>
-    // ==== INSERT YOUR JSON DATA HERE ====
+    // ==== SAMPLE JSON DATA (Replace with actual JSON data) ====
     const json = $$VALUES$$;
     // ==== END JSON DATA ====
 
-    function pad(n) { return n < 10 ? '0'+n : n; }
-    const today = new Date();
+    function pad(n) { return n < 10 ? '0' + n : n; }
+    function formatDateDDMMYYYY(dateString) {
+      const d = new Date(dateString);
+      return `${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${d.getFullYear()}`;
+    }
 
-    // State
-    let data = [];
-    let banks = [];
-    let selectedBank = '';
+    let data = json.values;
     let filterDays = 30;
     let chart = null;
-    let showType = ""buy""; // or ""sale""
+    let showType = ""buy"";
+    let selectedBank = null; // null means average chart
 
-    // DOM
-    const bankSelect = document.getElementById('bankSelect');
     const btn1d = document.getElementById('btn1d');
     const btn7d = document.getElementById('btn7d');
     const btn30d = document.getElementById('btn30d');
-    const loadingDiv = document.getElementById('loading');
     const toggleType = document.getElementById('toggleType');
-    const labelCompra = document.getElementById('labelCompra');
-    const labelVenta = document.getElementById('labelVenta');
+    const toggleLabel = document.getElementById('toggleLabel');
+    const chartNoData = document.getElementById('chartNoData');
+    const bankSummaryDiv = document.getElementById('bankSummary');
+    toggleLabel.style.color = ""#16e0b1"";
 
-    function loadData() {
-      loadingDiv.innerText = '';
-      data = json.values.filter(v => v.name);
-      buildBanksList();
-      selectedBank = banks[0] || '';
-      updateBankDropdown();
-      updateChart();
-    }
-
-    function buildBanksList() {
-      let names = data.map(v => v.name).filter(Boolean);
-      banks = [...new Set(names)].sort();
-    }
-
-    function updateBankDropdown() {
-      bankSelect.innerHTML = '';
-      banks.forEach(b => {
-        let opt = document.createElement('option');
-        opt.value = b;
-        opt.textContent = b;
-        bankSelect.appendChild(opt);
-      });
-      bankSelect.value = selectedBank;
-    }
-
-    function getChartDataForBank(bank, days, type) {
+    function getChartDataForBank(days, type, bank) {
+      const today = new Date();
       const cutoff = new Date(today);
       cutoff.setDate(today.getDate() - days + 1);
-      let filtered = data.filter(v => v.name === bank && new Date(v.date) >= cutoff && v.type === type);
-      let dates = [...new Set(filtered.map(v => v.date.slice(0,10)))].sort();
-      let valueMap = {};
-      filtered.forEach(v => {
-        let d = v.date.slice(0,10);
-        valueMap[d] = v.value;
-      });
-      let chartData = dates.map(d => valueMap[d] ?? null);
-      return { dates, chartData, fullData: filtered };
+
+      let filtered = data.filter(
+        v => (!bank || v.name === bank) && new Date(v.date) >= cutoff && v.type === type
+      );
+      let dates = [...new Set(filtered.map(v => v.date.slice(0, 10)))].sort();
+
+      let chartData;
+      if (!bank) {
+        // Average of all banks
+        chartData = dates.map(date => {
+          let values = filtered.filter(v => v.date.startsWith(date)).map(v => v.value);
+          if (values.length === 0) return null;
+          let avg = values.reduce((sum, val) => sum + val, 0) / values.length;
+          return Math.round(avg * 100) / 100;
+        });
+      } else {
+        // Only selected bank
+        chartData = dates.map(date => {
+          let rec = filtered.find(v => v.date.startsWith(date));
+          return rec ? rec.value : null;
+        });
+      }
+      return { dates, chartData };
     }
 
-    function formatDateDDMMYYYY(dateString) {
-      const d = new Date(dateString);
-      const day = pad(d.getDate());
-      const month = pad(d.getMonth() + 1);
-      const year = d.getFullYear();
-      return `${day}/${month}/${year}`;
+    function updateBankSummary() {
+      const bankSummary = document.getElementById(""bankSummary"");
+      if (!selectedBank) {
+        bankSummary.innerHTML = """";
+        return;
+      }
+      // Find latest date for selected bank
+      let bankData = data.filter(v => v.name === selectedBank);
+      if (!bankData.length) {
+        bankSummary.innerHTML = """";
+        return;
+      }
+      let dates = bankData.map(v => v.date).sort();
+      let latestDate = dates[dates.length - 1].slice(0, 10);
+      let buy = bankData.find(v => v.type === 'buy' && v.date.startsWith(latestDate));
+      let sale = bankData.find(v => v.type === 'sale' && v.date.startsWith(latestDate));
+      bankSummary.innerHTML = `
+        <span class=""bank-name"">${selectedBank}</span>
+        <span class=""rate-buy"">Compra: ${buy ? buy.value : '-'}</span>
+        <span class=""rate-sale"">Venta: ${sale ? sale.value : '-'}</span>
+      `;
     }
 
     function updateChart() {
-      if (!selectedBank) return;
-      let {dates, chartData, fullData} = getChartDataForBank(selectedBank, filterDays, showType);
+      let { dates, chartData } = getChartDataForBank(filterDays, showType, selectedBank);
       let color = showType === ""buy"" ? ""#16e0b1"" : ""#8b5cf6"";
-      let fillColor = showType === ""buy""
-        ? ""rgba(22,224,177,0.13)""
-        : ""rgba(139,92,246,0.11)"";
-      let label = showType === ""buy"" ? ""Compra"" : ""Venta"";
+      let fillColor = showType === ""buy"" ? ""rgba(22,224,177,0.13)"" : ""rgba(139,92,246,0.11)"";
+      let label;
+      if (!selectedBank) {
+        label = showType === ""buy"" ? ""Compra (promedio)"" : ""Venta (promedio)"";
+      } else {
+        label = (showType === ""buy"" ? ""Compra"" : ""Venta"") + "" - "" + selectedBank;
+      }
       let chartType = (filterDays === 1) ? 'bar' : 'line';
 
-      let chartOptions = {
-        responsive: true,
-        maintainAspectRatio: false,
-        interaction: { 
-          mode: 'index', 
-          intersect: false 
-        },
-        plugins: {
-          legend: { display: false },
-          tooltip: {
-            enabled: true,
-            backgroundColor: ""#23272f"",
-            titleColor: ""#fff"",
-            bodyColor: color,
-            borderColor: color,
-            borderWidth: 1,
-            caretSize: 6,
-            displayColors: false,
-            callbacks: {
-              // Show value and date in DD/MM/YYYY
-              title: function(ctx) {
-                if (!ctx[0]) return """";
-                let dateLabel = ctx[0].label || (ctx[0].parsed && ctx[0].parsed.x);
-                if (dateLabel && typeof dateLabel === ""string"") {
-                  return formatDateDDMMYYYY(dateLabel);
-                }
-                return dateLabel;
-              },
-              label: function(ctx) {
-                return `${label}: ${ctx.formattedValue}`;
-              }
-            }
-          }
-        },
-        scales: {
-          x: {
-            ticks: {
-              color: ""#bfc6d1"",
-              font: { family: 'Inter', size: 13, weight: 500 }
-            },
-            grid: { color: ""#23272f"" },
-            title: { display: false }
-          },
-          y: {
-            ticks: {
-              color: ""#bfc6d1"",
-              font: { family: 'Inter', size: 13, weight: 500 },
-              callback: v => v
-            },
-            grid: { color: ""#23272f"" },
-            title: { display: false }
-          }
-        }
-      };
+      // Remove no-data label
+      chartNoData.style.display = ""none"";
 
-      let barSettings = chartType === 'bar' ? {
-        borderWidth: 0,
-        borderRadius: 9,
-        backgroundColor: color,
-        barPercentage: 0.6,
-        categoryPercentage: 0.8,
-        minBarLength: 6,
-        barThickness: 50,
-        maxBarThickness: 66
-      } : {};
+      // If there is no data, show message
+      if (!dates.length || chartData.every(v => v === null || v === undefined)) {
+        if (chart) chart.destroy();
+        chartNoData.textContent = ""No hay datos para "" + (selectedBank ? selectedBank : ""los bancos"");
+        chartNoData.style.display = ""block"";
+        return;
+      }
 
       const config = {
         type: chartType,
         data: {
-          labels: dates.length > 0 ? dates : [formatDateDDMMYYYY(today)],
-          datasets: [
-            Object.assign({
-              label: label,
-              data: chartData.length > 0 ? chartData : [0],
-              borderColor: color,
-              backgroundColor: chartType === 'bar' ? color : fillColor,
-              fill: chartType === 'bar' ? false : true,
-              pointRadius: chartType === 'bar' ? 0 : 0,
-              pointHoverRadius: chartType === 'bar' ? 0 : 4,
-              tension: 0.32,
-              spanGaps: true
-            }, barSettings)
-          ]
+          labels: dates,
+          datasets: [{
+            label: label,
+            data: chartData,
+            borderColor: color,
+            backgroundColor: chartType === 'bar' ? color : fillColor,
+            fill: chartType !== 'bar',
+            tension: 0.32,
+            spanGaps: true
+          }]
         },
-        options: chartOptions
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false, labels: { color: ""#eef1f5"" } },
+            tooltip: {
+              backgroundColor: ""#23272f"",
+              titleColor: ""#eef1f5"",
+              bodyColor: color,
+              borderColor: color,
+              borderWidth: 1,
+              caretSize: 6,
+              displayColors: false,
+              callbacks: {
+                title: function(ctx) {
+                  if (!ctx[0]) return """";
+                  let dateLabel = ctx[0].label;
+                  return formatDateDDMMYYYY(dateLabel);
+                },
+                label: function(ctx) {
+                  return `${label}: ${ctx.formattedValue}`;
+                }
+              }
+            }
+          },
+          scales: {
+            x: { ticks: { color: ""#eef1f5"" }, grid: { color: ""#31353f"" }},
+            y: { ticks: { color: ""#eef1f5"" }, grid: { color: ""#31353f"" }}
+          }
+        }
       };
-
       if (chart) chart.destroy();
       chart = new Chart(document.getElementById('ratesChart').getContext('2d'), config);
     }
 
-    bankSelect.addEventListener('change', e => {
-      selectedBank = e.target.value;
-      updateChart();
-    });
-
+    // Range buttons
     [btn1d, btn7d, btn30d].forEach((btn, idx) => {
       btn.addEventListener('click', () => {
         filterDays = idx === 0 ? 1 : (idx === 1 ? 7 : 30);
-        [btn1d, btn7d, btn30d].forEach(b => b.classList.remove('selected'));
-        btn.classList.add('selected');
+        [btn1d, btn7d, btn30d].forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
         updateChart();
+        updateBankSummary();
       });
     });
 
     // Toggle Compra/Venta
     toggleType.addEventListener('change', () => {
       showType = toggleType.checked ? ""sale"" : ""buy"";
-      labelCompra.classList.toggle('inactive', toggleType.checked);
-      labelVenta.classList.toggle('inactive', !toggleType.checked);
+      toggleLabel.textContent = toggleType.checked ? ""Venta"" : ""Compra"";
+      toggleLabel.style.color = toggleType.checked ? ""#8b5cf6"" : ""#16e0b1"";
       updateChart();
-    });
-    labelCompra.addEventListener('click', () => {
-      if (toggleType.checked) {
-        toggleType.checked = false;
-        showType = ""buy"";
-        labelCompra.classList.remove('inactive');
-        labelVenta.classList.add('inactive');
-        updateChart();
-      }
-    });
-    labelVenta.addEventListener('click', () => {
-      if (!toggleType.checked) {
-        toggleType.checked = true;
-        showType = ""sale"";
-        labelCompra.classList.add('inactive');
-        labelVenta.classList.remove('inactive');
-        updateChart();
-      }
+      updateBankSummary();
     });
 
-    loadData();
+    // --- TABLE LOGIC (latest date for each bank) ---
+    function updateTable() {
+      let allDates = data.map(v => v.date);
+      let latestDate = allDates.sort().slice(-1)[0].slice(0, 10);
+      let banks = [...new Set(data.map(v => v.name))];
+      let tbody = document.querySelector(""#ratesTable tbody"");
+      tbody.innerHTML = """";
+      banks.forEach(bank => {
+        let buy = data.find(v => v.name === bank && v.type === 'buy' && v.date.startsWith(latestDate));
+        let sale = data.find(v => v.name === bank && v.type === 'sale' && v.date.startsWith(latestDate));
+        // Bank link
+        let bankLink = `<a href=""#"" class=""bank-link${selectedBank === bank ? "" selected"" : """"}"" data-bank=""${encodeURIComponent(bank)}"">${bank}</a>`;
+        tbody.innerHTML += `<tr>
+          <td>${bankLink}</td>
+          <td>${formatDateDDMMYYYY(latestDate)}</td>
+          <td>${buy ? buy.value : '-'}</td>
+          <td>${sale ? sale.value : '-'}</td>
+        </tr>`;
+      });
+
+      // Re-init DataTable
+      $('#ratesTable').DataTable({
+        destroy: true,
+        paging: false,
+        info: false,
+        ordering: true,
+        language: { emptyTable: ""No hay datos para mostrar"", search: """",
+    searchPlaceholder: ""Buscar banco por nombre"" }
+      });
+
+      // Re-bind bank link clicks
+      document.querySelectorAll('.bank-link').forEach(link => {
+  link.addEventListener('click', function(e) {
+    e.preventDefault();
+    let bank = decodeURIComponent(this.getAttribute('data-bank'));
+    selectedBank = bank;
+    updateTable();
+    updateChart();
+    updateBankSummary();
+    // Remove 'selected' class from all links, then add to this one
+    document.querySelectorAll('.bank-link').forEach(l => l.classList.remove('selected'));
+    this.classList.add('selected');
+    // Scroll to top
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+});
+    }
+
+    // --- INIT ---
+    $(document).ready(function() {
+  // Find the latest date in the dataset
+  let allDates = data.filter(v => v.type === 'buy').map(v => v.date);
+  let latestDate = allDates.sort().slice(-1)[0]?.slice(0, 10);
+
+  // Find all buy rates for that date
+  let buyRates = data.filter(v => v.type === 'buy' && v.date.startsWith(latestDate));
+  let minBuyObj = buyRates.reduce((min, curr) => {
+    if (min === null || (curr.value !== null && curr.value < min.value)) return curr;
+    return min;
+  }, null);
+
+  if (minBuyObj && minBuyObj.name) {
+    selectedBank = minBuyObj.name;
+  } else {
+    selectedBank = null;
+  }
+
+  updateChart();
+  updateTable();
+  updateBankSummary();
+});
+
   </script>
 </body>
 </html>
