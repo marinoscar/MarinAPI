@@ -63,6 +63,12 @@ namespace API.Controllers
         public async Task<IActionResult> GetRatesFromDb(DateTime startDate, DateTime endDate)
         {
             var stopWatch = System.Diagnostics.Stopwatch.StartNew();
+
+            if(startDate.Year < 1970)
+                startDate = DateTime.Today.Date; // Default to today if the year is before 1970
+            if (endDate.Year < 1970)
+                endDate = DateTime.Today.Date.AddDays(1);
+
             var values = await DbHelper.GetExchangeRateAsync(startDate, endDate);
             stopWatch.Stop();
             return Ok(new
